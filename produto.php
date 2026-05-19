@@ -265,14 +265,34 @@ if (!$produto) {
         </div>
         
         <ul class="sidebar-nav">
-            <li><a href="index.php"><span class="icon">🏠</span> Início</a></li>
-            <li><a href="produto.php" class="active"><span class="icon">📦</span> Produto</a></li>
-            <li><a href="recursos.php"><span class="icon">⚡</span> Recursos</a></li>
-            <li><a href="suporte.php"><span class="icon">💬</span> Suporte</a></li>
-            <?php if (isLoggedIn()): ?>
-                <li><a href="configuracoes.php"><span class="icon">⚙️</span> Configurações</a></li>
-            <?php endif; ?>
-        </ul>
+    <li><a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">
+        <span class="icon">🏠</span> Início
+    </a></li>
+    <li><a href="produto.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'produto.php' ? 'active' : ''; ?>">
+        <span class="icon">📦</span> Produto
+    </a></li>
+    <li><a href="recursos.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'recursos.php' ? 'active' : ''; ?>">
+        <span class="icon">⚡</span> Recursos
+    </a></li>
+    <li><a href="suporte.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'suporte.php' ? 'active' : ''; ?>">
+        <span class="icon">💬</span> Suporte
+    </a></li>
+    
+    <?php if (isLoggedIn()): ?>
+        <li><a href="configuracoes.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'configuracoes.php' ? 'active' : ''; ?>">
+            <span class="icon">⚙️</span> Configurações
+        </a></li>
+        
+        <!-- Link do Dashboard APENAS para admins -->
+        <?php if (isAdmin()): ?>
+            <li style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--primary);">
+                <a href="admin/index.php" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;">
+                    <span class="icon">📊</span> Dashboard Admin
+                </a>
+            </li>
+        <?php endif; ?>
+    <?php endif; ?>
+</ul>
     </aside>
     
     <!-- Main Content -->
@@ -403,7 +423,6 @@ if (!$produto) {
     
     <script src="js/script.js"></script>
 
-    // Definir se usuário está logado
     <script>
         const usuarioLogado = <?php echo isLoggedIn() ? 'true' : 'false'; ?>;
     </script>

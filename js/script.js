@@ -104,6 +104,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Verificar se está logado antes de adicionar ao carrinho
+    const botoesComprar = document.querySelectorAll('.btn-adicionar-carrinho, .btn-comprar-agora');
+    botoesComprar.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            // Verificar se o usuário está logado
+            if (typeof usuarioLogado === 'undefined' || !usuarioLogado) {
+                e.preventDefault();
+                window.location.href = 'login.php?redirect=' + encodeURIComponent(window.location.href);
+                return;
+            }
+        });
+    });
     
     // Adicionar ao carrinho
     const btnAdicionarCarrinho = document.querySelectorAll('.btn-adicionar-carrinho');

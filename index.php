@@ -102,7 +102,7 @@ $produto = getProduto(1);
                     <span class="carrossel-dot"></span>
                 </div>
             </div>
-            
+
             <!-- Por que escolher FlowMonitor -->
             <section>
                 <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem; color: var(--gray-900);">
@@ -136,38 +136,43 @@ $produto = getProduto(1);
     </div>
 
     
-            <!-- Planos -->
-            <section>
-                <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem; color: var(--gray-900);">
-                    Escolha seu plano
-                </h2>
+    <!-- Planos -->
+    <section>
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem; color: var(--gray-900);">
+            Escolha seu plano
+        </h2>
                 
-                <div class="planos-container">
-                    <?php foreach ($planos as $plano): ?>
-                        <div class="plano-card <?php echo $plano['tipo'] === 'premium' ? 'selected' : ''; ?>" 
-                             data-plano="<?php echo $plano['tipo']; ?>">
-                            <div class="plano-nome"><?php echo $plano['nome']; ?></div>
-                            <div class="plano-preco">
-                                R$ <?php echo number_format($plano['preco'], 2, ',', '.'); ?>
-                                <span>/mês</span>
-                            </div>
-                            <p class="plano-descricao"><?php echo $plano['descricao']; ?></p>
+        <div class="planos-container">
+            <?php foreach ($planos as $plano): ?>
+                <div class="plano-card <?php echo $plano['tipo'] === 'premium' ? 'selected' : ''; ?>" 
+                    data-plano="<?php echo $plano['tipo']; ?>">
+                    <div class="plano-nome"><?php echo $plano['nome']; ?></div>
+                    <div class="plano-preco">
+                        R$ <?php echo number_format($plano['preco'], 2, ',', '.'); ?>
+                        <span>/mês</span>
+                    </div>
+                    <p class="plano-descricao"><?php echo $plano['descricao']; ?></p>
                             
-                            <ul class="plano-recursos">
-                                <?php foreach (explode(',', $plano['recursos']) as $recurso): ?>
-                                    <li><?php echo trim($recurso); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                            
-                            <button class="btn-plano btn-adicionar-carrinho" 
-                                    data-produto="<?php echo $plano['id']; ?>">
-                                Começar agora
-                            </button>
-                        </div>
-                    <?php endforeach; ?>
+                    <ul class="plano-recursos">
+                        <?php foreach (explode(',', $plano['recursos']) as $recurso): ?>
+                            <li><?php echo trim($recurso); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                        
+                    <button class="btn-plano btn-adicionar-carrinho" 
+                            data-produto="<?php echo $plano['id']; ?>">
+                        Começar agora
+                    </button>
                 </div>
-            </section>
+            <?php endforeach; ?>
+        </div>
+    </section>
     
     <script src="js/script.js"></script>
+
+    // Definir se usuário está logado
+    <script>
+        const usuarioLogado = <?php echo isLoggedIn() ? 'true' : 'false'; ?>;
+    </script>
 </body>
 </html>

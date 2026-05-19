@@ -402,5 +402,10 @@ if (!$produto) {
     </main>
     
     <script src="js/script.js"></script>
+
+    // Definir se usuário está logado
+    <script>
+        const usuarioLogado = <?php echo isLoggedIn() ? 'true' : 'false'; ?>;
+    </script>
 </body>
 </html>

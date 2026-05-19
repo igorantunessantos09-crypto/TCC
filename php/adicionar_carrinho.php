@@ -4,7 +4,7 @@ require_once 'config.php';
 header('Content-Type: application/json');
 
 if (!isLoggedIn()) {
-    echo json_encode(['success' => false, 'message' => 'Faça login primeiro']);
+    echo json_encode(['success' => false, 'message' => 'Faça login primeiro', 'redirect' => '../login.php']);
     exit;
 }
 
@@ -13,6 +13,14 @@ $usuario_id = $_SESSION['usuario_id'];
 
 if (!$produto_id) {
     echo json_encode(['success' => false, 'message' => 'Produto não especificado']);
+    exit;
+}
+
+// Verificar se o produto existe
+$stmt = $pdo->prepare("SELECT id FROM produto WHERE id = ?");
+$stmt->execute([$produto_id]);
+if (!$stmt->fetch()) {
+    echo json_encode(['success' => false, 'message' => 'Produto não encontrado']);
     exit;
 }
 

@@ -22,53 +22,7 @@ $pedidos = getPedidosUsuario($usuario_id);
     <title>Minha Conta - FlowMonitor</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        .logout-card {
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            padding: 1rem 2rem;
-            margin-top: 2rem;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .logout-card:hover {
-            border-color: var(--danger);
-        }
-        
-        .logout-btn {
-            padding: 0.75rem 2rem;
-            background: var(--danger);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .logout-btn:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .logout-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        
-        .logout-icon {
-            font-size: 1.5rem;
-        }
-    </style>
+    <link rel="stylesheet" href="css/minha-conta.css">
 </head>
 <body>
     <!-- Back Button -->

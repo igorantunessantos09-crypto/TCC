@@ -131,6 +131,7 @@ body {
     font-weight: 700;
     color: var(--gray-900);
     background: linear-gradient(135deg, var(--primary), var(--secondary));
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }

@@ -76,38 +76,6 @@ $produto = getProduto(1);
                 <p>Economize água, reduza custos e proteja o meio ambiente com o FlowMonitor</p>
             </section>
             
-            <!-- Planos -->
-            <section>
-                <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem; color: var(--gray-900);">
-                    Escolha seu plano
-                </h2>
-                
-                <div class="planos-container">
-                    <?php foreach ($planos as $plano): ?>
-                        <div class="plano-card <?php echo $plano['tipo'] === 'premium' ? 'selected' : ''; ?>" 
-                             data-plano="<?php echo $plano['tipo']; ?>">
-                            <div class="plano-nome"><?php echo $plano['nome']; ?></div>
-                            <div class="plano-preco">
-                                R$ <?php echo number_format($plano['preco'], 2, ',', '.'); ?>
-                                <span>/mês</span>
-                            </div>
-                            <p class="plano-descricao"><?php echo $plano['descricao']; ?></p>
-                            
-                            <ul class="plano-recursos">
-                                <?php foreach (explode(',', $plano['recursos']) as $recurso): ?>
-                                    <li><?php echo trim($recurso); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                            
-                            <button class="btn-plano btn-adicionar-carrinho" 
-                                    data-produto="<?php echo $plano['id']; ?>">
-                                Começar agora
-                            </button>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </section>
-            
             <!-- Carrossel de Notícias -->
             <div class="carrossel-container">
                 <div class="carrossel-slides">
@@ -134,20 +102,6 @@ $produto = getProduto(1);
                     <span class="carrossel-dot"></span>
                 </div>
             </div>
-            
-            <!-- Seção do Produto -->
-            <section class="produto-section">
-                <img src="<?php echo $produto['imagem'] ?? 'assets/produto.png'; ?>" 
-                     alt="FlowMonitor" 
-                     class="produto-imagem">
-                <div class="produto-info">
-                    <h2><?php echo $produto['nome'] ?? 'Sensor de Fluxo de Água'; ?></h2>
-                    <p><?php echo $produto['descricao'] ?? 'O FlowMonitor é um dispositivo inteligente que monitora o fluxo de água em tempo real, enviando alertas e relatórios detalhados diretamente para seu smartphone.'; ?></p>
-                    <button class="btn-plano" onclick="window.location.href='produto.php'">
-                        Saiba mais
-                    </button>
-                </div>
-            </section>
             
             <!-- Por que escolher FlowMonitor -->
             <section>
@@ -180,6 +134,39 @@ $produto = getProduto(1);
             </section>
         </main>
     </div>
+
+    
+            <!-- Planos -->
+            <section>
+                <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem; color: var(--gray-900);">
+                    Escolha seu plano
+                </h2>
+                
+                <div class="planos-container">
+                    <?php foreach ($planos as $plano): ?>
+                        <div class="plano-card <?php echo $plano['tipo'] === 'premium' ? 'selected' : ''; ?>" 
+                             data-plano="<?php echo $plano['tipo']; ?>">
+                            <div class="plano-nome"><?php echo $plano['nome']; ?></div>
+                            <div class="plano-preco">
+                                R$ <?php echo number_format($plano['preco'], 2, ',', '.'); ?>
+                                <span>/mês</span>
+                            </div>
+                            <p class="plano-descricao"><?php echo $plano['descricao']; ?></p>
+                            
+                            <ul class="plano-recursos">
+                                <?php foreach (explode(',', $plano['recursos']) as $recurso): ?>
+                                    <li><?php echo trim($recurso); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                            
+                            <button class="btn-plano btn-adicionar-carrinho" 
+                                    data-produto="<?php echo $plano['id']; ?>">
+                                Começar agora
+                            </button>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </section>
     
     <script src="js/script.js"></script>
 </body>

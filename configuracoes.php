@@ -156,6 +156,183 @@ unset($_SESSION['mensagem_config']);
                     <div><strong>Membro desde:</strong> <?php echo date('d/m/Y', strtotime($usuario['criado_em'] ?? 'now')); ?></div>
                 </div>
             </div>
+
+                        <!-- Endereços -->
+            <div class="setting-card">
+                <h3>
+                    <span class="icon">📍</span> Endereços
+                </h3>
+                
+                <?php
+                // Buscar endereços do usuário
+                $stmt = $pdo->prepare("SELECT * FROM endereco WHERE usuario_id = ? ORDER BY tipo ASC");
+                $stmt->execute([$_SESSION['usuario_id']]);
+                $enderecos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+                
+                <?php foreach ($enderecos as $endereco): ?>
+                    <div style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; border: 2px solid <?php echo $endereco['tipo'] === 'principal' ? 'var(--primary)' : 'var(--border-color)'; ?>;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                            <strong style="color: var(--text-primary);">
+                                <?php echo $endereco['tipo'] === 'principal' ? '📍 Principal' : '📌 Secundário'; ?>
+                            </strong>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button onclick="editarEndereco(<?php echo $endereco['id']; ?>)" 
+                                        style="background: var(--primary); color: white; border: none; padding: 0.4rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">
+                                    Editar
+                                </button>
+                                <?php if ($endereco['tipo'] !== 'principal'): ?>
+                                    <button onclick="tornarPrincipal(<?php echo $endereco['id']; ?>)" 
+                                            style="background: var(--success); color: white; border: none; padding: 0.4rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem;">
+                                        Tornar Principal
+                                    </button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); margin: 0;">
+                            <?php echo $endereco['rua'] . ', ' . $endereco['numero']; ?>
+                            <?php echo $endereco['complemento'] ? ' - ' . $endereco['complemento'] : ''; ?><br>
+                            <?php echo $endereco['bairro'] . ' - ' . $endereco['cidade'] . '/' . $endereco['estado']; ?><br>
+                            CEP: <?php echo $endereco['cep']; ?>
+                        </p>
+                    </div>
+                <?php endforeach; ?>
+                
+                <?php if (count($enderecos) < 2): ?>
+                    <button onclick="mostrarFormEndereco()" 
+                            style="width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border: none; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                        + Adicionar Endereço Secundário
+                    </button>
+                <?php endif; ?>
+            </div>
+
+            <!-- Form de Endereço (oculto) -->
+            <div id="formEndereco" style="display: none;" class="setting-card">
+                <h3>📝 <?php echo count($enderecos) < 1 ? 'Adicionar' : 'Editar'; ?> Endereço</h3>
+                <form method="POST" action="php/salvar_endereco.php">
+                    <input type="hidden" name="endereco_id" id="enderecoId" value="">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>CEP</label>
+                            <input type="text" name="cep" id="cep" required placeholder="00000-000">
+                        </div>
+                        <div class="form-group">
+                            <label>Número</label>
+                            <input type="text" name="numero" required placeholder="Nº">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Rua</label>
+                        <input type="text" name="rua" id="rua" required placeholder="Nome da rua">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Complemento</label>
+                        <input type="text" name="complemento" placeholder="Apto, Bloco, etc.">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Bairro</label>
+                            <input type="text" name="bairro" id="bairro" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cidade</label>
+                            <input type="text" name="cidade" id="cidade" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Estado</label>
+                        <select name="estado" id="estado" required>
+                            <option value="">Selecione</option>
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn-save">💾 Salvar Endereço</button>
+                </form>
+            </div>
+
+            <script>
+                function mostrarFormEndereco() {
+                    document.getElementById('formEndereco').style.display = 'block';
+                    document.getElementById('formEndereco').scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                function editarEndereco(id) {
+                    // Buscar dados do endereço
+                    fetch(`php/buscar_endereco.php?id=${id}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById('enderecoId').value = data.id;
+                            document.getElementById('cep').value = data.cep;
+                            document.getElementById('rua').value = data.rua;
+                            document.getElementById('bairro').value = data.bairro;
+                            document.getElementById('cidade').value = data.cidade;
+                            document.getElementById('estado').value = data.estado;
+                            document.querySelector('input[name="numero"]').value = data.numero;
+                            document.querySelector('input[name="complemento"]').value = data.complemento || '';
+                            
+                            mostrarFormEndereco();
+                        });
+                }
+                
+                function tornarPrincipal(id) {
+                    if (confirm('Tornar este endereço como principal?')) {
+                        fetch('php/tornar_principal.php', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                            body: `endereco_id=${id}`
+                        }).then(() => location.reload());
+                    }
+                }
+                
+                // Buscar CEP automaticamente
+                document.getElementById('cep')?.addEventListener('blur', function() {
+                    const cep = this.value.replace(/\D/g, '');
+                    if (cep.length === 8) {
+                        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (!data.erro) {
+                                    document.getElementById('rua').value = data.logradouro || '';
+                                    document.getElementById('bairro').value = data.bairro || '';
+                                    document.getElementById('cidade').value = data.localidade || '';
+                                    document.getElementById('estado').value = data.uf || '';
+                                }
+                            });
+                    }
+                });
+            </script>
         </div>
     </main>
     

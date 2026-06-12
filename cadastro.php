@@ -2,7 +2,7 @@
 require_once 'php/config.php';
 
 if (isLoggedIn()) {
-    redirect('minha-conta.php');
+    redirect('index.php');
 }
 
 $tema = $_SESSION['tema'] ?? 'light';

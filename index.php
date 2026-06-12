@@ -157,36 +157,54 @@ $produto = getProduto(1);
 
     
     <!-- Planos -->
-    <section>
-        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem; color: var(--gray-900);">
-            Escolha seu plano
-        </h2>
-                
-        <div class="planos-container">
-            <?php foreach ($planos as $plano): ?>
-                <div class="plano-card <?php echo $plano['tipo'] === 'premium' ? 'selected' : ''; ?>" 
-                    data-plano="<?php echo $plano['tipo']; ?>">
-                    <div class="plano-nome"><?php echo $plano['nome']; ?></div>
-                    <div class="plano-preco">
-                        R$ <?php echo number_format($plano['preco'], 2, ',', '.'); ?>
-                        <span>/mês</span>
-                    </div>
-                    <p class="plano-descricao"><?php echo $plano['descricao']; ?></p>
-                            
-                    <ul class="plano-recursos">
-                        <?php foreach (explode(',', $plano['recursos']) as $recurso): ?>
-                            <li><?php echo trim($recurso); ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                        
-                    <button class="btn-plano btn-adicionar-carrinho" 
-                            data-produto="<?php echo $plano['id']; ?>">
-                        Começar agora
-                    </button>
+<section>
+    <h2 style="text-align: center; font-size: 2rem; margin-bottom: 2rem; color: var(--gray-900);">
+        Escolha seu plano
+    </h2>
+            
+    <div class="planos-container">
+        <?php 
+        // Garantir que os planos estão em ordem: Básico, Premium, Empresarial
+        foreach ($planos as $index => $plano): 
+            // Buscar o ID do produto correspondente
+            $stmt = $pdo->prepare("SELECT id FROM produto WHERE nome LIKE ? ORDER BY preco ASC");
+            $stmt->execute(['%' . $plano['nome'] . '%']);
+            $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Se não encontrou, criar o produto
+            if (!$produto) {
+                $stmt = $pdo->prepare("INSERT INTO produto (nome, descricao, preco, quantidade, imagem) VALUES (?, ?, ?, 999, 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500')");
+                $stmt->execute([$plano['nome'], $plano['descricao'], $plano['preco']]);
+                $produto_id = $pdo->lastInsertId();
+            } else {
+                $produto_id = $produto['id'];
+            }
+        ?>
+            <div class="plano-card <?php echo $plano['tipo'] === 'premium' ? 'selected' : ''; ?>" 
+                 data-plano="<?php echo $plano['tipo']; ?>">
+                <div class="plano-nome"><?php echo htmlspecialchars($plano['nome']); ?></div>
+                <div class="plano-preco">
+                    R$ <?php echo number_format($plano['preco'], 2, ',', '.'); ?>
+                    <span>/mês</span>
                 </div>
-            <?php endforeach; ?>
-        </div>
-    </section>
+                <p class="plano-descricao"><?php echo htmlspecialchars($plano['descricao']); ?></p>
+                        
+                <ul class="plano-recursos">
+                    <?php foreach (explode(',', $plano['recursos']) as $recurso): ?>
+                        <li><?php echo trim(htmlspecialchars($recurso)); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                    
+                <button class="btn-plano btn-adicionar-carrinho" 
+                        data-produto="<?php echo $produto_id; ?>"
+                        data-plano="<?php echo $plano['tipo']; ?>"
+                        style="width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    Começar agora
+                </button>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</section>
     
     <script src="js/script.js"></script>
 

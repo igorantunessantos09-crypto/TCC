@@ -2,20 +2,9 @@
 require_once 'php/config.php';
 require_once 'php/functions.php';
 
-// Buscar informações do produto
-$stmt = $pdo->query("SELECT * FROM produto ORDER BY criado_em DESC LIMIT 1");
-$produto = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Se não tiver produto, usar dados padrão
-if (!$produto) {
-    $produto = [
-        'nome' => 'Sensor FlowMonitor Pro',
-        'descricao' => 'Dispositivo inteligente de monitoramento de fluxo de água em tempo real.',
-        'preco' => 299.90,
-        'imagem' => 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500',
-        'quantidade' => 50
-    ];
-}
+// Buscar TODOS os produtos (não só o primeiro)
+$stmt = $pdo->query("SELECT * FROM produto ORDER BY preco ASC");
+$produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -23,7 +12,7 @@ if (!$produto) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($produto['nome']); ?> - FlowMonitor</title>
+    <title>Produtos - FlowMonitor</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/produto.css">
@@ -46,34 +35,21 @@ if (!$produto) {
         </div>
         
         <ul class="sidebar-nav">
-    <li><a href="index.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">
-        <span class="icon">🏠</span> Início
-    </a></li>
-    <li><a href="produto.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'produto.php' ? 'active' : ''; ?>">
-        <span class="icon">📦</span> Produto
-    </a></li>
-    <li><a href="recursos.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'recursos.php' ? 'active' : ''; ?>">
-        <span class="icon">⚡</span> Recursos
-    </a></li>
-    <li><a href="suporte.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'suporte.php' ? 'active' : ''; ?>">
-        <span class="icon">💬</span> Suporte
-    </a></li>
-    
-    <?php if (isLoggedIn()): ?>
-        <li><a href="configuracoes.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'configuracoes.php' ? 'active' : ''; ?>">
-            <span class="icon">⚙️</span> Configurações
-        </a></li>
-        
-        <!-- Link do Dashboard APENAS para admins -->
-        <?php if (isAdmin()): ?>
-            <li style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--primary);">
-                <a href="admin/index.php" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;">
-                    <span class="icon">📊</span> Dashboard Admin
-                </a>
-            </li>
-        <?php endif; ?>
-    <?php endif; ?>
-</ul>
+            <li><a href="index.php"><span class="icon">🏠</span> Início</a></li>
+            <li><a href="produto.php" class="active"><span class="icon">📦</span> Produto</a></li>
+            <li><a href="recursos.php"><span class="icon">⚡</span> Recursos</a></li>
+            <li><a href="suporte.php"><span class="icon">💬</span> Suporte</a></li>
+            <?php if (isLoggedIn()): ?>
+                <li><a href="configuracoes.php"><span class="icon">⚙️</span> Configurações</a></li>
+                <?php if (isAdmin()): ?>
+                    <li style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--primary);">
+                        <a href="admin/index.php" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;">
+                            <span class="icon">📊</span> Dashboard Admin
+                        </a>
+                    </li>
+                <?php endif; ?>
+            <?php endif; ?>
+        </ul>
     </aside>
     
     <!-- Main Content -->
@@ -101,111 +77,74 @@ if (!$produto) {
             </div>
         </header>
         
-        <div class="produto-page">
-            <!-- Botão Voltar -->
-            <div class="produto-header">
+        <div class="produtos-page">
+            <!-- Cabeçalho -->
+            <div class="produtos-header">
                 <a href="index.php" class="back-btn" style="margin-bottom: 0;">
                     ← Voltar
                 </a>
                 <div class="produto-logo-small">FM</div>
+                <h1 style="font-size: 2rem; color: var(--gray-900); margin: 0;">Nossos Produtos</h1>
             </div>
             
-            <div class="produto-grid">
-                <!-- Imagem do Produto -->
-                <div class="produto-imagem-container">
-                    <div class="produto-imagem-principal">
-                        <img src="<?php echo $produto['imagem'] ?? 'assets/produto.png'; ?>" 
-                             alt="<?php echo htmlspecialchars($produto['nome']); ?>">
-                    </div>
+            <?php if (empty($produtos)): ?>
+                <div style="text-align: center; padding: 4rem; background: var(--white); border-radius: var(--radius-lg); box-shadow: var(--shadow);">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">📦</div>
+                    <h2>Nenhum produto disponível</h2>
+                    <p style="color: var(--gray-500); margin: 1rem 0;">Volte mais tarde para conferir nossas ofertas!</p>
+                    <a href="index.php" class="btn-plano" style="display: inline-block; text-decoration: none;">Ver Planos</a>
                 </div>
-                
-                <!-- Detalhes do Produto -->
-                <div class="produto-detalhes">
-                    <span class="produto-tag">✅ Em estoque</span>
-                    
-                    <h1><?php echo htmlspecialchars($produto['nome']); ?></h1>
-                    
-                    <div class="produto-preco-display">
-                        R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?>
-                        <span class="parcelas">ou 12x de R$ <?php echo number_format($produto['preco'] / 12, 2, ',', '.'); ?> sem juros</span>
-                    </div>
-                    
-                    <div class="produto-descricao">
-                        <?php echo nl2br(htmlspecialchars($produto['descricao'])); ?>
-                    </div>
-                    
-                    <!-- Especificações -->
-                    <div class="produto-especificacoes">
-                        <h3>Especificações Técnicas</h3>
-                        <div class="especificacao-grid">
-                            <div class="especificacao-item">
-                                <span class="icon">📏</span>
-                                <div class="info">
-                                    <strong>Compatibilidade</strong>
-                                    <span>Canos de 1/2" a 2"</span>
+            <?php else: ?>
+                <div class="produtos-grid">
+                    <?php foreach ($produtos as $produto): ?>
+                        <div class="produto-card">
+                            <img src="<?php echo $produto['imagem'] ?: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500'; ?>" 
+                                 alt="<?php echo htmlspecialchars($produto['nome']); ?>"
+                                 class="produto-card-imagem"
+                                 onerror="this.src='https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500'">
+                            
+                            <div class="produto-card-body">
+                                <?php if ($produto['quantidade'] > 0): ?>
+                                    <span class="produto-card-tag">✅ Em estoque</span>
+                                <?php else: ?>
+                                    <span class="produto-card-tag" style="background: var(--danger);">❌ Indisponível</span>
+                                <?php endif; ?>
+                                
+                                <h3><?php echo htmlspecialchars($produto['nome']); ?></h3>
+                                <p class="descricao">
+                                    <?php echo !empty($produto['descricao']) ? htmlspecialchars(substr($produto['descricao'], 0, 150)) . '...' : 'Monitoramento inteligente de fluxo de água.'; ?>
+                                </p>
+                                
+                                <div class="produto-card-preco">
+                                    R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?>
+                                    <span class="parcela">ou 12x de R$ <?php echo number_format($produto['preco'] / 12, 2, ',', '.'); ?> sem juros</span>
                                 </div>
-                            </div>
-                            <div class="especificacao-item">
-                                <span class="icon">🔋</span>
-                                <div class="info">
-                                    <strong>Bateria</strong>
-                                    <span>Duração de 2 anos</span>
-                                </div>
-                            </div>
-                            <div class="especificacao-item">
-                                <span class="icon">📶</span>
-                                <div class="info">
-                                    <strong>Conectividade</strong>
-                                    <span>WiFi 2.4GHz</span>
-                                </div>
-                            </div>
-                            <div class="especificacao-item">
-                                <span class="icon">📱</span>
-                                <div class="info">
-                                    <strong>App</strong>
-                                    <span>iOS e Android</span>
-                                </div>
-                            </div>
-                            <div class="especificacao-item">
-                                <span class="icon">💧</span>
-                                <div class="info">
-                                    <strong>Precisão</strong>
-                                    <span>99.8% de precisão</span>
-                                </div>
-                            </div>
-                            <div class="especificacao-item">
-                                <span class="icon">🛡️</span>
-                                <div class="info">
-                                    <strong>Garantia</strong>
-                                    <span>2 anos</span>
+                                
+                                <?php if ($produto['quantidade'] <= 5 && $produto['quantidade'] > 0): ?>
+                                    <p class="estoque-baixo">⚠️ Últimas <?php echo $produto['quantidade']; ?> unidades!</p>
+                                <?php endif; ?>
+                                
+                                <div class="produto-card-footer">
+                                    <button class="btn-card-comprar btn-adicionar-carrinho" 
+                                            data-produto="<?php echo $produto['id']; ?>">
+                                        Comprar Agora
+                                    </button>
+                                    <button class="btn-card-carrinho btn-adicionar-carrinho" 
+                                            data-produto="<?php echo $produto['id']; ?>">
+                                        🛒
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Ações -->
-                    <div class="produto-acoes">
-                        <button class="btn-comprar-agora btn-adicionar-carrinho" data-produto="<?php echo $produto['id'] ?? 1; ?>">
-                            Comprar Agora
-                        </button>
-                        <button class="btn-adicionar-carrinho btn-adicionar-carrinho" data-produto="<?php echo $produto['id'] ?? 1; ?>">
-                            🛒 Adicionar ao Carrinho
-                        </button>
-                    </div>
-                    
-                    <div class="estoque-info">
-                        <span class="estoque-dot"></span>
-                        <?php echo ($produto['quantidade'] ?? 0) > 0 ? 'Em estoque - Envio imediato' : 'Fora de estoque'; ?>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-            </div>
+            <?php endif; ?>
         </div>
     </main>
     
-    <script src="js/script.js"></script>
-
     <script>
         const usuarioLogado = <?php echo isLoggedIn() ? 'true' : 'false'; ?>;
     </script>
+    <script src="js/script.js"></script>
 </body>
 </html>

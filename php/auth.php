@@ -19,7 +19,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         if ($usuario['nivel_acesso'] === 'admin') {
             redirect('../admin/index.php');
         } else {
-            redirect('../minha-conta.php');
+            redirect('../index.php');
         }
     } else {
         $_SESSION['error'] = 'Email ou senha incorretos';

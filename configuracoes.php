@@ -28,10 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $stmt = $pdo->prepare("SELECT * FROM usuario WHERE id = ?");
 $stmt->execute([$_SESSION['usuario_id']]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-?>
 
+$tema = $_SESSION['tema'] ?? 'light';
+?>
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="<?php echo $_SESSION['tema'] ?? 'light'; ?>">
+<html lang="pt-BR" data-theme="<?php echo $tema; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

@@ -10,10 +10,11 @@ $itens = getCarrinhoItens();
 $total = array_sum(array_map(function($item) {
     return $item['preco'] * $item['quantidade'];
 }, $itens));
-?>
 
+$tema = $_SESSION['tema'] ?? 'light';
+?>
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="<?php echo $_SESSION['tema'] ?? 'light'; ?>">
+<html lang="pt-BR" data-theme="<?php echo $tema; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

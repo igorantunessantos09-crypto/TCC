@@ -19,10 +19,11 @@ if (empty($itens)) {
 $stmt = $pdo->prepare("SELECT * FROM endereco WHERE usuario_id = ? AND principal = 1");
 $stmt->execute([$_SESSION['usuario_id']]);
 $endereco = $stmt->fetch(PDO::FETCH_ASSOC);
-?>
 
+$tema = $_SESSION['tema'] ?? 'light';
+?>
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="<?php echo $_SESSION['tema'] ?? 'light'; ?>>
+<html lang="pt-BR" data-theme="<?php echo $tema; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

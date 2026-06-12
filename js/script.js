@@ -81,29 +81,49 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
     
-    // Tema Escuro/Claro
+    // Tema Escuro/Claro - Versão otimizada
+function initTheme() {
     const themeToggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+    
+    // Carregar tema salvo
+    const savedTheme = localStorage.getItem('flowmonitor_theme') || 'light';
+    
+    // Aplicar imediatamente para evitar flicker
+    html.setAttribute('data-theme', savedTheme);
+    document.body.classList.toggle('dark-mode', savedTheme === 'dark');
+    
     if (themeToggle) {
-        // Carregar tema salvo
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
         themeToggle.checked = savedTheme === 'dark';
         
         themeToggle.addEventListener('change', function() {
             const theme = this.checked ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
             
-            // Salvar no servidor se logado
-            if (typeof usuarioId !== 'undefined') {
+            // Aplicar tema instantaneamente
+            html.setAttribute('data-theme', theme);
+            document.body.classList.toggle('dark-mode', theme === 'dark');
+            
+            // Salvar preferência
+            localStorage.setItem('flowmonitor_theme', theme);
+            
+            // Salvar no servidor (se logado)
+            if (typeof usuarioLogado !== 'undefined' && usuarioLogado) {
                 fetch('php/salvar_tema.php', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `tema=${theme}`
-                });
+                }).catch(() => {}); // Silencioso se falhar
             }
         });
     }
+}
+
+// Inicializar tema o mais cedo possível
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTheme);
+} else {
+    initTheme();
+}
 
     // Verificar se está logado antes de adicionar ao carrinho
     const botoesComprar = document.querySelectorAll('.btn-adicionar-carrinho, .btn-comprar-agora');

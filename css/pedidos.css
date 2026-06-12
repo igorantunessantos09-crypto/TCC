@@ -1,75 +1,236 @@
+/* css/pedidos.css */
+.pedidos-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1rem;
+}
 
+.pedidos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.pedidos-header h1 {
+    font-size: 2rem;
+    color: var(--text-primary);
+}
+
+.pedidos-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-mini {
+    background: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.stat-mini .number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.stat-mini .label {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.pedido-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.pedido-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
+}
+
+.pedido-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.pedido-id {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.pedido-data {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-left: 1rem;
+}
+
+.status-badge {
+    padding: 0.3rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-pendente { background: var(--warning-light); color: #92400e; }
+.status-pago { background: var(--success-light); color: #065f46; }
+.status-enviado { background: var(--info-light); color: #1e40af; }
+.status-cancelado { background: var(--danger-light); color: #991b1b; }
+
+[data-theme="dark"] .status-pendente { color: #fbbf24; }
+[data-theme="dark"] .status-pago { color: #34d399; }
+[data-theme="dark"] .status-enviado { color: #60a5fa; }
+[data-theme="dark"] .status-cancelado { color: #f87171; }
+
+.pedido-produtos {
+    margin-bottom: 1rem;
+}
+
+.pedido-produto-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.pedido-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 2px solid var(--border-color);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.pedido-total .valor {
+    color: var(--primary);
+    font-size: 1.25rem;
+}
+
+.pedido-acoes {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.btn-detalhes {
+    padding: 0.5rem 1.2rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.btn-detalhes:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-cancelar {
+    padding: 0.5rem 1.2rem;
+    background: var(--danger);
+    color: white;
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.btn-cancelar:hover {
+    background: #dc2626;
+}
+
+.filtros {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.filtro-btn {
+    padding: 0.5rem 1.5rem;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.filtro-btn:hover,
+.filtro-btn.active {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.empty-state .icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h2 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
     .pedidos-container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 1rem;
-    }
-    
-    .pedido-card {
-        background: var(--bg-secondary);
-        border-radius: var(--radius-lg);
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-        box-shadow: var(--shadow);
-        border: 1px solid var(--border-color);
-        transition: var(--transition);
-    }
-    
-    .pedido-card:hover {
-        box-shadow: var(--shadow-md);
-        border-color: var(--primary);
+        padding: 0.5rem;
     }
     
     .pedido-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid var(--border-color);
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        flex-direction: column;
+        align-items: flex-start;
     }
     
-    .status-badge {
-        padding: 0.35rem 1rem;
-        border-radius: var(--radius-full);
-        font-size: 0.85rem;
-        font-weight: 600;
+    .pedido-data {
+        margin-left: 0;
+        display: block;
+        margin-top: 0.25rem;
     }
-    
-    .status-pendente { background: var(--warning-light); color: #92400e; }
-    .status-pago { background: var(--success-light); color: #065f46; }
-    .status-enviado { background: var(--info-light); color: #1e40af; }
-    .status-cancelado { background: var(--danger-light); color: #991b1b; }
-    
-    .filtros {
-        display: flex;
-        gap: 0.5rem;
-        margin-bottom: 2rem;
-        flex-wrap: wrap;
-    }
-    
-    .filtro-btn {
-        padding: 0.6rem 1.5rem;
-        border: 2px solid var(--border-color);
-        background: var(--bg-secondary);
-        border-radius: var(--radius-full);
-        cursor: pointer;
-        font-weight: 500;
-        transition: var(--transition);
-        color: var(--text-primary);
-        font-size: 0.9rem;
-    }
-    
-    .filtro-btn:hover,
-    .filtro-btn.active {
-        border-color: var(--primary);
-        background: var(--primary);
-        color: white;
-    }
-    
-    [data-theme="dark"] .status-pendente { color: #fbbf24; }
-    [data-theme="dark"] .status-pago { color: #34d399; }
-    [data-theme="dark"] .status-enviado { color: #60a5fa; }
-    [data-theme="dark"] .status-cancelado { color: #f87171; }
+}

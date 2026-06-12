@@ -248,6 +248,20 @@ $total = array_sum(array_map(function($item) {
             }
         }
     </style>
+
+    <script>
+    // Forçar tema imediatamente
+    (function() {
+        const theme = localStorage.getItem('flowmonitor_theme') || '<?php echo $_SESSION['tema'] ?? 'light'; ?>';
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        // Também adicionar classe no body
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark-mode');
+        }
+    })();
+    </script>
+
 </head>
 <body>
     <!-- Back Button -->

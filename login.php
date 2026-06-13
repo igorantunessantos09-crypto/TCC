@@ -2,7 +2,7 @@
 require_once 'php/config.php';
 
 if (isLoggedIn()) {
-    redirect('minha-conta.php');
+    redirect('index.php');
 }
 
 $tema = $_SESSION['tema'] ?? 'light';
@@ -49,6 +49,12 @@ $tema = $_SESSION['tema'] ?? 'light';
             <button type="submit" class="btn-primary" style="margin-bottom: 1rem;">
                 Entrar
             </button>
+
+            <div style="text-align: right; margin-bottom: 1rem;">
+                <a href="esqueci-senha.php" style="color: var(--primary); font-size: 0.9rem; text-decoration: none; font-weight: 500;">
+                    Esqueceu a senha?
+                </a>
+            </div>
         </form>
         
         <div style="text-align: center;">

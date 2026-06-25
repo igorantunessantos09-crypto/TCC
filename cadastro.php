@@ -117,13 +117,74 @@ $mostrar_verificacao = isset($_SESSION['usuario_temp_id']);
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .verification-container {
-            max-width: 450px;
-            margin: 2rem auto;
+        .register-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #0284c7 100%);
+        }
+        
+        .register-container {
+            width: 100%;
+            max-width: 480px;
             background: var(--bg-secondary);
-            padding: 3rem;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .register-logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-radius: 16px;
-            box-shadow: 0 20px 25px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+            color: white;
+        }
+        
+        .register-header h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .register-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        
+        .verification-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.5s ease;
         }
         
         .code-inputs {
@@ -134,7 +195,7 @@ $mostrar_verificacao = isset($_SESSION['usuario_temp_id']);
         }
         
         .code-input {
-            width: 50px;
+            width: 52px;
             height: 60px;
             text-align: center;
             font-size: 1.5rem;
@@ -149,8 +210,14 @@ $mostrar_verificacao = isset($_SESSION['usuario_temp_id']);
         .code-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
             transform: scale(1.05);
+            background: var(--bg-secondary);
+        }
+        
+        .code-input.filled {
+            border-color: var(--primary);
+            background: var(--bg-hover);
         }
         
         .btn-verify {
@@ -164,11 +231,12 @@ $mostrar_verificacao = isset($_SESSION['usuario_temp_id']);
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 1rem;
         }
         
-        .btn-verify:hover {
+        .btn-verify:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
         }
         
         .btn-verify:disabled {
@@ -181,38 +249,140 @@ $mostrar_verificacao = isset($_SESSION['usuario_temp_id']);
             text-align: center;
             color: var(--text-muted);
             font-size: 0.9rem;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
         }
         
-        .timer span {
+        .timer a {
             color: var(--primary);
             font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .timer a:hover {
+            text-decoration: underline;
         }
         
         .alert-success {
             background: var(--success-light);
             color: #065f46;
-            padding: 1rem;
+            padding: 1rem 1.25rem;
             border-radius: 12px;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             text-align: center;
+            font-weight: 500;
+            border: 1px solid var(--success);
+        }
+        
+        .alert-error {
+            background: var(--danger-light);
+            color: #991b1b;
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid var(--danger);
         }
         
         [data-theme="dark"] .alert-success {
             color: #34d399;
         }
         
-        .alert-error {
-            background: var(--danger-light);
-            color: #991b1b;
-            padding: 1rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
         [data-theme="dark"] .alert-error {
             color: #f87171;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+            background: var(--bg-secondary);
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
+        }
+        
+        .register-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .register-footer a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .back-link:hover {
+            color: var(--primary);
+        }
+        
+        @media (max-width: 500px) {
+            .register-container,
+            .verification-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .code-input {
+                width: 44px;
+                height: 52px;
+                font-size: 1.25rem;
+            }
         }
     </style>
 </head>

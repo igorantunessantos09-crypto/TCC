@@ -71,21 +71,23 @@ $tema = $_SESSION['tema'] ?? 'light';
             <!-- Header -->
             <header class="header">
                 <div class="header-actions">
-                    <button class="cart-btn" onclick="window.location.href='carrinho.php'">
+                    <button class="cart-btn" onclick="window.location.href='carrinho.php'" title="Carrinho">
                         🛒
                         <span class="cart-count"><?php echo getCarrinhoCount(); ?></span>
                     </button>
                     
+                    <div class="header-divider"></div>
+                    
                     <?php if (isLoggedIn()): ?>
-                        <button class="user-btn" onclick="window.location.href='minha-conta.php'">
+                        <button class="user-btn" onclick="window.location.href='minha-conta.php'" title="Minha Conta">
                             <div class="user-avatar">
                                 <?php echo strtoupper(substr($_SESSION['usuario_nome'] ?? 'U', 0, 1)); ?>
                             </div>
-                            <span>Minha Conta</span>
+                            <span><?php echo htmlspecialchars($_SESSION['usuario_nome'] ?? 'Conta'); ?></span>
                         </button>
                     <?php else: ?>
-                        <button class="user-btn" onclick="window.location.href='login.php'">
-                            Entrar
+                        <button class="user-btn login-btn" onclick="window.location.href='login.php'">
+                            👤 Entrar
                         </button>
                     <?php endif; ?>
                 </div>

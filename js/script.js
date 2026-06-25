@@ -81,44 +81,58 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
     
-    // Tema Escuro/Claro - Versão otimizada
+    // Tema Escuro/Claro - Versão corrigida
 function initTheme() {
     const themeToggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
     
-    // Carregar tema salvo
-    const savedTheme = localStorage.getItem('flowmonitor_theme') || 'light';
+    // Verificar se está logado (definido em cada página)
+    const isLoggedIn = typeof usuarioLogado !== 'undefined' && usuarioLogado;
     
-    // Aplicar imediatamente para evitar flicker
-    html.setAttribute('data-theme', savedTheme);
-    document.body.classList.toggle('dark-mode', savedTheme === 'dark');
+    let theme;
+    
+    if (isLoggedIn) {
+        // Logado: usar tema da sessão
+        theme = html.getAttribute('data-theme') || 'light';
+    } else {
+        // Deslogado: SEMPRE tema claro
+        theme = 'light';
+        localStorage.removeItem('flowmonitor_theme');
+    }
+    
+    // Aplicar tema
+    html.setAttribute('data-theme', theme);
+    document.body.classList.toggle('dark-mode', theme === 'dark');
     
     if (themeToggle) {
-        themeToggle.checked = savedTheme === 'dark';
+        themeToggle.checked = theme === 'dark';
         
         themeToggle.addEventListener('change', function() {
-            const theme = this.checked ? 'dark' : 'light';
-            
-            // Aplicar tema instantaneamente
-            html.setAttribute('data-theme', theme);
-            document.body.classList.toggle('dark-mode', theme === 'dark');
-            
-            // Salvar preferência
-            localStorage.setItem('flowmonitor_theme', theme);
-            
-            // Salvar no servidor (se logado)
-            if (typeof usuarioLogado !== 'undefined' && usuarioLogado) {
-                fetch('php/salvar_tema.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `tema=${theme}`
-                }).catch(() => {}); // Silencioso se falhar
+            if (!isLoggedIn) {
+                // Não permitir mudar tema se deslogado
+                this.checked = false;
+                html.setAttribute('data-theme', 'light');
+                document.body.classList.remove('dark-mode');
+                return;
             }
+            
+            const newTheme = this.checked ? 'dark' : 'light';
+            
+            // Aplicar tema
+            html.setAttribute('data-theme', newTheme);
+            document.body.classList.toggle('dark-mode', newTheme === 'dark');
+            
+            // Salvar no servidor
+            fetch('php/salvar_tema.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `tema=${newTheme}`
+            }).catch(() => {});
         });
     }
 }
 
-// Inicializar tema o mais cedo possível
+// Inicializar imediatamente
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initTheme);
 } else {

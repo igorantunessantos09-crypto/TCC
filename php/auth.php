@@ -15,6 +15,15 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         $_SESSION['usuario_nome'] = $usuario['nome'];
         $_SESSION['nivel_acesso'] = $usuario['nivel_acesso'];
         $_SESSION['tema'] = $usuario['tema'] ?? 'light';
+
+        // Depois de verificar senha e antes de redirecionar:
+        if ($usuario && password_verify($senha, $usuario['senha'])) {
+            $_SESSION['usuario_id'] = $usuario['id'];
+            $_SESSION['usuario_nome'] = $usuario['nome'];
+            $_SESSION['nivel_acesso'] = $usuario['nivel_acesso'];
+            
+            // Usar o tema salvo no banco
+            $_SESSION['tema'] = $usuario['tema'] ?? 'light';
         
         if ($usuario['nivel_acesso'] === 'admin') {
             redirect('../admin/index.php');
